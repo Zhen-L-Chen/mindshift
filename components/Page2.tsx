@@ -17,6 +17,7 @@ export default function Page2() {
   const { t } = useLang();
   const ref = useSectionProgress<HTMLElement>("rsvp", "top 65%");
   const cols = useRef<HTMLDivElement>(null);
+  const mark = useRef<HTMLDivElement>(null);
 
   useMotion(() => {
     const el = cols.current;
@@ -29,6 +30,22 @@ export default function Page2() {
       ease: "power2.out",
       scrollTrigger: { trigger: el, start: "top 74%" },
     });
+
+    // the finale plays itself: once the mark is seen, MIND and SHIFT slide in
+    // from far apart and dock — SHIFT righting itself on the way
+    const mind = mark.current?.querySelector(".mind-live");
+    const shift = mark.current?.querySelector(".shift-live");
+    if (mind && shift) {
+      const SEP = 200;
+      gsap.set(mind, { x: -SEP });
+      gsap.set(shift, { x: SEP, rotation: 180, transformOrigin: "50% 51%" });
+      const tl = gsap.timeline({
+        scrollTrigger: { trigger: mark.current, start: "top bottom", once: true },
+      });
+      tl.to(shift, { rotation: 0, duration: 1.9, ease: "power2.inOut" }, 0.1)
+        .to(mind, { x: 0, duration: 2.3, ease: "power3.inOut" }, 0)
+        .to(shift, { x: -2.9, y: 0.29, duration: 2.3, ease: "power3.inOut" }, 0);
+    }
   }, [t]);
 
   return (
@@ -74,7 +91,7 @@ export default function Page2() {
         </div>
 
         <div className="p2-foot">
-          <div className="p2-mark">
+          <div className="p2-mark" ref={mark}>
             <MindshiftMark className="small-mark" />
           </div>
         </div>

@@ -124,8 +124,8 @@ export default function Landing() {
       );
       // header circle series stretches outward as you scroll (reverse trickle)
       root.style.setProperty("--ring-x", sm.toFixed(3));
-      // MIND and SHIFT start far apart, converge into the lockup at the bottom
-      root.style.setProperty("--sep", (f * 70).toFixed(2));
+      // (the bottom mark's convergence is a GSAP timeline in Page2 — it plays
+      // once, on entering the viewport, independent of scroll position)
 
       const darkT = store.sections.rsvp; // page 2 arrival 0..1
       smDark += (darkT - smDark) * 0.09;
@@ -147,7 +147,6 @@ export default function Landing() {
       root.style.removeProperty("--sdy");
       root.style.removeProperty("--wob-k");
       root.style.removeProperty("--ring-x");
-      root.style.removeProperty("--sep");
       root.style.removeProperty("--bg-dyn");
     };
   }, []);

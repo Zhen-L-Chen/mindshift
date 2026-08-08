@@ -94,13 +94,8 @@ button {
    --sdx/--sdy seat the flipped SHIFT exactly like the designer's
    MINDSHIFT_REVERSE composition; --wob-k peaks mid-rotation only. */
 
-/* the two halves start far apart and converge as you scroll (--sep → 0),
-   SHIFT rotating home along the way — one synced mechanism */
 .shift-live {
-  transform: translate(
-      calc((var(--sdx, -2.9) + var(--sep, 0)) * 1px),
-      calc(var(--sdy, 0.29) * 1px)
-    )
+  transform: translate(calc(var(--sdx, -2.9) * 1px), calc(var(--sdy, 0.29) * 1px))
     rotate(calc(var(--shift-rot, 180) * 1deg));
   transform-box: fill-box;
   transform-origin: 50% 50%;
@@ -108,7 +103,6 @@ button {
 }
 
 .mind-live {
-  transform: translateX(calc(var(--sep, 0) * -1px));
   transform-box: fill-box;
   transform-origin: 50% 50%;
   will-change: transform;
@@ -248,8 +242,6 @@ a.btn,
   height: auto;
   display: block;
   color: var(--cream);
-  /* the hero lockup stays tight — convergence belongs to the bottom mark */
-  --sep: 0;
 }
 
 .hero-tagline {

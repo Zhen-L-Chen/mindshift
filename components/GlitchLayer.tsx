@@ -194,8 +194,10 @@ export default function GlitchLayer() {
           c.colors[(Math.random() * c.colors.length) | 0] =
             PALETTE[(Math.random() * PALETTE.length) | 0];
       }
-      // page-2 arrival fade + ~12 fps redraw (slow fades need the frames)
-      canvas.style.opacity = String(Math.min(1, store.sections.rsvp * 1.4));
+      // presence builds gradually with scroll depth — a whisper at the page
+      // turn, full voice only near the bottom (~12 fps redraw)
+      const depth = Math.min(1, Math.max(0, (store.p - 0.5) / 0.4));
+      canvas.style.opacity = String(depth * depth * (3 - 2 * depth));
       acc += dt;
       if (acc >= 1 / 12) {
         acc = 0;
