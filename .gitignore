@@ -1,0 +1,9 @@
+node_modules
+.next
+out
+.DS_Store
+*.tsbuildinfo
+next-env.d.ts
+
+# designer's raw delivery — the site ships only the assets it uses (public/)
+_REMISE_PAPERMINDS_LANDiNG_V1/
