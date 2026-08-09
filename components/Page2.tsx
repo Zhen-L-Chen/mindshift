@@ -8,10 +8,35 @@ import MindshiftMark from "./MindshiftMark";
 import CinemaMark from "./CinemaMark";
 
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
-const PHOTOS = Array.from(
-  { length: 14 },
-  (_, i) => `${BASE}/photos/b${String(i + 1).padStart(2, "0")}.jpg`
-);
+
+/**
+ * The cast. Each frame is aimed at its face: `ar` = aspect ratio, `a` = the
+ * face's vertical center as a fraction of image height, `w` = weight in the
+ * rotation (face-forward shots appear more). b09 (top-down table, no faces)
+ * sits this one out.
+ */
+type Ph = { src: string; ar: number; a: number; w: number };
+const PHOTOS: Ph[] = [
+  { src: "b01.jpg", ar: 1.5, a: 0.44, w: 2 },
+  { src: "b02.jpg", ar: 1.5, a: 0.46, w: 2 },
+  { src: "b03.jpg", ar: 1.5, a: 0.46, w: 2 },
+  { src: "b04.jpg", ar: 0.666, a: 0.22, w: 2 },
+  { src: "b05.jpg", ar: 1.5, a: 0.3, w: 2 },
+  { src: "b06.jpg", ar: 1.5, a: 0.34, w: 1 },
+  { src: "b07.jpg", ar: 1.5, a: 0.28, w: 2 },
+  { src: "b08.jpg", ar: 1.5, a: 0.3, w: 2 },
+  { src: "b10.jpg", ar: 1.5, a: 0.32, w: 2 },
+  { src: "b11.jpg", ar: 1.5, a: 0.52, w: 2 },
+  { src: "b12.jpg", ar: 1.5, a: 0.64, w: 1 },
+  { src: "b13.jpg", ar: 1.5, a: 0.3, w: 2 },
+  { src: "b14.jpg", ar: 1.5, a: 0.46, w: 2 },
+].map((p) => ({ ...p, src: `${BASE}/photos/${p.src}` }));
+
+/** geometry that lands the face band in the letters (image width 634.4) */
+const frameGeo = (p: Ph) => {
+  const h = 634.4 / p.ar;
+  return { h, y: 59.7 - p.a * h };
+};
 
 /**
  * PDF page 2, cinema edition: the giant MINDSHIFT is a window onto the
@@ -27,9 +52,12 @@ export default function Page2() {
   const cols = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
 
-  // stable shuffled cut order per mount
+  // weighted, shuffled rotation — face-forward frames come around more often
   const order = useMemo(() => {
-    const a = PHOTOS.map((_, i) => i);
+    const a: number[] = [];
+    PHOTOS.forEach((p, i) => {
+      for (let k = 0; k < p.w; k++) a.push(i);
+    });
     for (let i = a.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [a[i], a[j]] = [a[j], a[i]];
@@ -39,9 +67,9 @@ export default function Page2() {
 
   // warm the cache so the cuts never flash empty
   useEffect(() => {
-    PHOTOS.forEach((src) => {
+    PHOTOS.forEach((p) => {
       const im = new Image();
-      im.src = src;
+      im.src = p.src;
     });
   }, []);
 
@@ -104,6 +132,13 @@ export default function Page2() {
     ];
     const cut = { on: false, clock: 0, nextAt: 0, k: 0, beat: 0, split: false };
     const pick = () => PHOTOS[order[cut.k++ % order.length]];
+    const show = (im: SVGImageElement | null, p: Ph) => {
+      if (!im) return;
+      const g = frameGeo(p);
+      im.setAttribute("href", p.src);
+      im.setAttribute("height", String(g.h));
+      im.setAttribute("y", String(g.y));
+    };
 
     const doCut = () => {
       const dur = RHYTHM[cut.beat++ % RHYTHM.length] * (0.85 + Math.random() * 0.3);
@@ -111,19 +146,19 @@ export default function Page2() {
 
       if (cut.split) {
         // resolve last beat's disagreement: both halves sync up
-        const src = pick();
-        imgM?.setAttribute("href", src);
-        imgS?.setAttribute("href", src);
+        const p = pick();
+        show(imgM, p);
+        show(imgS, p);
         cut.split = false;
       } else if (r < 0.14) {
-        // split frame: MIND and SHIFT see different things, for one beat
-        imgM?.setAttribute("href", pick());
-        imgS?.setAttribute("href", pick());
+        // split frame: MIND and SHIFT see different faces, for one beat
+        show(imgM, pick());
+        show(imgS, pick());
         cut.split = true;
       } else {
-        const src = pick();
-        imgM?.setAttribute("href", src);
-        imgS?.setAttribute("href", src);
+        const p = pick();
+        show(imgM, p);
+        show(imgS, p);
         if (r < 0.24) {
           // film flash on the cut
           gsap.fromTo(
@@ -219,7 +254,11 @@ export default function Page2() {
   return (
     <section className="page2" id="page2" ref={ref}>
       <div className="cinema" ref={cinema}>
-        <CinemaMark firstPhoto={PHOTOS[0]} />
+        <CinemaMark
+          firstPhoto={PHOTOS[0].src}
+          firstH={frameGeo(PHOTOS[0]).h}
+          firstY={frameGeo(PHOTOS[0]).y}
+        />
       </div>
 
       <div className="p2-cols" ref={cols}>

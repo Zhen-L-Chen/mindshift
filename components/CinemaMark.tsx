@@ -4,13 +4,32 @@ import { MIND, SHIFT } from "./MindshiftMark";
  * The cinema wordmark: the giant MINDSHIFT whose letterforms are windows onto
  * the archive photography.
  *
- * Layers per half: photo (<image>, oversized for pan headroom) → flash rect →
- * cream letterforms on top. The cream layer makes the match-cut with the hero
- * lockup — the mark arrives looking exactly like the hero's, then "develops"
- * into film as Page2's master timeline fades the cream away and starts the
- * cuts. SHIFT lives in a rotating group (reversed until the writing ends).
+ * Layers per half: photo (<image>, geometry aimed at the frame's face by
+ * Page2) → flash rect → cream letterforms on top. The cream layer makes the
+ * match-cut with the hero lockup — the mark arrives looking exactly like the
+ * hero's, then "develops" into film as the cuts begin. SHIFT lives in a
+ * rotating group (reversed until the writing ends).
  */
-export default function CinemaMark({ firstPhoto }: { firstPhoto: string }) {
+export default function CinemaMark({
+  firstPhoto,
+  firstH,
+  firstY,
+}: {
+  firstPhoto: string;
+  firstH: number;
+  firstY: number;
+}) {
+  const img = (cls: string) => (
+    <image
+      className={`cin-img ${cls}`}
+      href={firstPhoto}
+      x="-12"
+      y={firstY}
+      width="634.4"
+      height={firstH}
+      preserveAspectRatio="none"
+    />
+  );
   return (
     <svg
       className="cinema-svg"
@@ -33,15 +52,7 @@ export default function CinemaMark({ firstPhoto }: { firstPhoto: string }) {
       </defs>
 
       <g clipPath="url(#cin-clip-m)">
-        <image
-          className="cin-img cin-img-m"
-          href={firstPhoto}
-          x="-12"
-          y="-8"
-          width="634.4"
-          height="135.4"
-          preserveAspectRatio="xMidYMid slice"
-        />
+        {img("cin-img-m")}
         <rect
           className="cin-flash cin-flash-m"
           x="0"
@@ -60,15 +71,7 @@ export default function CinemaMark({ firstPhoto }: { firstPhoto: string }) {
 
       <g className="cin-shift">
         <g clipPath="url(#cin-clip-s)">
-          <image
-            className="cin-img cin-img-s"
-            href={firstPhoto}
-            x="-12"
-            y="-8"
-            width="634.4"
-            height="135.4"
-            preserveAspectRatio="xMidYMid slice"
-          />
+          {img("cin-img-s")}
           <rect
             className="cin-flash cin-flash-s"
             x="0"
