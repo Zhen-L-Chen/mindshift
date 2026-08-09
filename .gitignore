@@ -7,3 +7,6 @@ next-env.d.ts
 
 # designer's raw delivery — the site ships only the assets it uses (public/)
 _REMISE_PAPERMINDS_LANDiNG_V1/
+
+# raw photo archive — the site ships resized copies from public/photos
+Archive (1)/

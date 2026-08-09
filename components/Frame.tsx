@@ -58,11 +58,27 @@ export default function FrameTop() {
         </button>
       </div>
       <header className="header" ref={ref}>
-        <DraftGoalLogo />
+        <a
+          className="logo-link"
+          href="https://dng.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Draft & Goal — dng.ai"
+        >
+          <DraftGoalLogo />
+        </a>
         <RingsMotif className="rings" />
         <p className="tag header-tag">{t.topTag}</p>
         <RingsMotif className="rings" mirror />
-        <PapermindsLogo />
+        <a
+          className="logo-link"
+          href="https://paperminds.ai/"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="paperminds — paperminds.ai"
+        >
+          <PapermindsLogo />
+        </a>
       </header>
     </div>
   );

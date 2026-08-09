@@ -66,13 +66,6 @@ button {
 
 /* ——— layers ——— */
 
-.canvas-wrap {
-  position: fixed;
-  inset: 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
 .page {
   position: relative;
   z-index: 2;
@@ -253,49 +246,7 @@ a.btn,
 }
 
 .hero-foot {
-  padding: 0 0 clamp(18px, 3vh, 32px);
-}
-
-/* the cascade under the CTA — pixels dripping downward, inviting the scroll */
-.scroll-drip {
-  display: grid;
-  justify-items: center;
-  gap: 6px;
-  padding-top: 16px;
-}
-
-.scroll-drip span {
-  width: 11px;
-  height: 3px;
-  background: rgba(244, 249, 225, 0.85);
-  box-shadow: -2.5px 0.5px 0 rgba(224, 71, 63, 0.45),
-    2.5px -0.5px 0 rgba(59, 91, 219, 0.45);
-  opacity: 0;
-  animation: drip 3.8s linear infinite;
-  animation-delay: calc(var(--i, 0) * 0.3s);
-}
-
-@keyframes drip {
-  0% {
-    opacity: 0;
-  }
-  12% {
-    opacity: 0.95;
-  }
-  55% {
-    opacity: 0.75;
-  }
-  78%,
-  100% {
-    opacity: 0;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .scroll-drip span {
-    animation: none;
-    opacity: 0.5;
-  }
+  padding: 0 0 clamp(28px, 6vh, 64px);
 }
 
 .hero-bar {
@@ -320,60 +271,66 @@ a.btn,
   position: relative;
 }
 
-/* bar-light ambience: a faint warm glow over the night page */
-.page2::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  background: radial-gradient(
-    85% 55% at 50% 22%,
-    rgba(255, 158, 66, 0.08),
-    transparent 70%
-  );
-}
-
-.glitch-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  pointer-events: none;
-  opacity: 0;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .glitch-canvas {
-    opacity: 0.85;
-  }
-}
-
-.p2-content {
-  position: relative;
-  min-height: 100svh;
-  display: grid;
-  grid-template-rows: auto 1fr auto;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .page2 {
     background: var(--dark); /* no JS evolution — hard page turn like the PDF */
   }
 }
 
-.p2-strip {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 16px;
-  padding: 15px var(--pad);
-  border-top: 1px solid var(--hairline);
-  border-bottom: 1px solid var(--hairline);
-  margin-top: clamp(24px, 5vh, 56px);
+/* ——— the cinema wordmark: photos through the letterforms ——— */
+
+.cinema {
+  padding: clamp(18px, 3.5vh, 40px) var(--pad) 0;
 }
 
-.p2-strip .tag {
-  font-size: clamp(14px, 1.5vw, 20px);
+.cinema-svg {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* GSAP owns .cin-shift's transform (svgOrigin pivot on the SHIFT letters);
+   a stylesheet transform here would poison GSAP's matrix parsing. The static
+   flip exists only for reduced-motion. */
+.cin-shift {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cin-shift {
+    transform: rotate(180deg);
+    transform-box: view-box;
+    transform-origin: 448.9px 59.7px;
+  }
+}
+
+/* ——— typewriter ——— */
+
+.typed {
+  position: relative;
+}
+
+.typed-out {
+  position: absolute;
+  inset: 0;
+}
+
+.typed-out.typing::after {
+  content: "▮";
+  margin-left: 2px;
+  animation: caret 0.7s steps(1) infinite;
+}
+
+@keyframes caret {
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .typed-out {
+    display: none;
+  }
 }
 
 .p2-cols {
@@ -399,24 +356,39 @@ a.btn,
   margin: 0;
 }
 
-.p2-foot {
-  padding-bottom: clamp(24px, 5vh, 56px);
-}
-
-.p2-mark {
+/* the bottom strip: date · small lockup (slides together) · networking */
+.p2-foot-strip {
   display: grid;
-  place-items: center;
-  padding: 16px var(--pad);
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  padding: 14px var(--pad);
   border-top: 1px solid var(--hairline);
   border-bottom: 1px solid var(--hairline);
+  margin-top: clamp(50px, 9vh, 110px);
+  margin-bottom: clamp(24px, 5vh, 56px);
+  overflow: clip;
 }
 
-.small-mark {
-  width: clamp(150px, 17vw, 280px);
+.p2-foot-strip .tag:last-child {
+  justify-self: end;
+}
+
+.strip-mark {
+  width: clamp(96px, 11vw, 150px);
   height: auto;
   display: block;
   color: var(--cream);
-  /* this one converges: far apart on arrival, locked at the very bottom */
+}
+
+.btn-blue,
+a.btn.btn-blue {
+  background: var(--blue);
+  color: var(--cream);
+}
+
+.btn-blue:hover {
+  box-shadow: 4px 4px 0 rgba(0, 13, 255, 0.35);
 }
 
 /* ——— responsive ——— */
@@ -472,9 +444,13 @@ a.btn,
   .hero-bar .tag:last-child {
     justify-self: center;
   }
-  .p2-strip {
-    flex-direction: column;
-    gap: 4px;
-    align-items: flex-start;
+  .p2-foot-strip {
+    grid-template-columns: 1fr;
+    justify-items: center;
+    gap: 10px;
+    text-align: center;
+  }
+  .p2-foot-strip .tag:last-child {
+    justify-self: center;
   }
 }

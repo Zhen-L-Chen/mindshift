@@ -84,12 +84,6 @@ export default function Hero() {
           </a>
           <p className="tag">{t.netTag}</p>
         </div>
-        {/* pixel cascade: continuity from the CTA, leading the eye down */}
-        <div className="scroll-drip" aria-hidden>
-          {Array.from({ length: 7 }, (_, i) => (
-            <span key={i} style={{ "--i": i } as React.CSSProperties} />
-          ))}
-        </div>
       </div>
     </section>
   );

@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import dynamic from "next/dynamic";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Lenis from "lenis";
@@ -12,10 +11,6 @@ import Hero from "./Hero";
 import Page2 from "./Page2";
 
 gsap.registerPlugin(ScrollTrigger);
-
-const ParticleCanvas = dynamic(() => import("./ParticleCanvas"), {
-  ssr: false,
-});
 
 const BLUE: [number, number, number] = [0, 13, 255];
 const BLUE_DEEP: [number, number, number] = [0, 9, 214];
@@ -159,7 +154,6 @@ export default function Landing() {
 
   return (
     <LangContext.Provider value={{ lang, t: dicts[lang], setLang }}>
-      <ParticleCanvas />
       <div className="grain" aria-hidden />
       <div key={lang}>
         <FrameTop />
