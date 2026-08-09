@@ -125,8 +125,11 @@ export default function Landing() {
       const darkT = store.sections.rsvp; // page 2 arrival 0..1
       smDark += (darkT - smDark) * 0.09;
       const base = mix(BLUE, BLUE_DEEP, Math.min(1, sm * 1.6));
-      // day → dusk plum → warm bar night (never a cold gray in between)
-      const k = Math.min(1, smDark);
+      // day → dusk plum → warm bar night. The blue HOLDS through the first
+      // 45% of the arrival (mobile reaches it early), then dusk sweeps in.
+      const kRaw = Math.min(1, smDark);
+      const kH = kRaw < 0.45 ? 0 : (kRaw - 0.45) / 0.55;
+      const k = kH * kH * (3 - 2 * kH);
       const col = rgb(
         k < 0.5 ? mix(base, DUSK, k * 2) : mix(DUSK, DARK, (k - 0.5) * 2)
       );

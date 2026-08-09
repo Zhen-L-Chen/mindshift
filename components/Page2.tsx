@@ -15,22 +15,25 @@ const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
  * rotation (face-forward shots appear more). b09 (top-down table, no faces)
  * sits this one out.
  */
-type Ph = { src: string; ar: number; a: number; w: number };
+type Ph = { src: string; ar: number; a: number; w: number; br: number };
 const PHOTOS: Ph[] = [
-  { src: "b01.jpg", ar: 1.5, a: 0.44, w: 2 },
-  { src: "b02.jpg", ar: 1.5, a: 0.46, w: 2 },
-  { src: "b03.jpg", ar: 1.5, a: 0.46, w: 2 },
-  { src: "b04.jpg", ar: 0.666, a: 0.22, w: 2 },
-  { src: "b05.jpg", ar: 1.5, a: 0.3, w: 2 },
-  { src: "b06.jpg", ar: 1.5, a: 0.34, w: 1 },
-  { src: "b07.jpg", ar: 1.5, a: 0.28, w: 2 },
-  { src: "b08.jpg", ar: 1.5, a: 0.3, w: 2 },
-  { src: "b10.jpg", ar: 1.5, a: 0.32, w: 2 },
-  { src: "b11.jpg", ar: 1.5, a: 0.52, w: 2 },
-  { src: "b12.jpg", ar: 1.5, a: 0.64, w: 1 },
-  { src: "b13.jpg", ar: 1.5, a: 0.3, w: 2 },
-  { src: "b14.jpg", ar: 1.5, a: 0.46, w: 2 },
+  { src: "b01.jpg", ar: 1.5, a: 0.44, w: 2, br: 1.2 },
+  { src: "b02.jpg", ar: 1.5, a: 0.46, w: 2, br: 1.15 },
+  { src: "b03.jpg", ar: 1.5, a: 0.46, w: 2, br: 1.1 },
+  { src: "b04.jpg", ar: 0.666, a: 0.22, w: 2, br: 1.25 },
+  { src: "b05.jpg", ar: 1.5, a: 0.3, w: 2, br: 1.2 },
+  { src: "b06.jpg", ar: 1.5, a: 0.34, w: 1, br: 1.45 },
+  { src: "b07.jpg", ar: 1.5, a: 0.28, w: 2, br: 1.15 },
+  { src: "b08.jpg", ar: 1.5, a: 0.3, w: 2, br: 1.2 },
+  { src: "b10.jpg", ar: 1.5, a: 0.32, w: 2, br: 1.15 },
+  { src: "b11.jpg", ar: 1.5, a: 0.52, w: 2, br: 1.5 },
+  { src: "b12.jpg", ar: 1.5, a: 0.64, w: 1, br: 1.5 },
+  { src: "b13.jpg", ar: 1.5, a: 0.3, w: 2, br: 1.2 },
+  { src: "b14.jpg", ar: 1.5, a: 0.46, w: 2, br: 1.55 },
 ].map((p) => ({ ...p, src: `${BASE}/photos/${p.src}` }));
+
+/** the frame the film settles on — bright, joyful, holds the longest */
+const FINAL = PHOTOS.find((p) => p.src.includes("b10"))!;
 
 /** geometry that lands the face band in the letters (image width 634.4) */
 const frameGeo = (p: Ph) => {
@@ -47,7 +50,7 @@ const frameGeo = (p: Ph) => {
  */
 export default function Page2() {
   const { t } = useLang();
-  const ref = useSectionProgress<HTMLElement>("rsvp", "top 65%");
+  const ref = useSectionProgress<HTMLElement>("rsvp", "top 40%");
   const cinema = useRef<HTMLDivElement>(null);
   const cols = useRef<HTMLDivElement>(null);
   const strip = useRef<HTMLDivElement>(null);
@@ -138,6 +141,8 @@ export default function Page2() {
       im.setAttribute("href", p.src);
       im.setAttribute("height", String(g.h));
       im.setAttribute("y", String(g.y));
+      // lift the moody frames — small letters on small screens eat shadows
+      im.style.filter = `brightness(${p.br})`;
     };
 
     const doCut = () => {
@@ -226,10 +231,12 @@ export default function Page2() {
       );
     });
 
-    // writing done: the cuts settle, SHIFT rights itself
+    // writing done: the cuts settle on the bright frame, SHIFT rights itself
     master.call(
       () => {
         cut.on = false;
+        show(imgM, FINAL);
+        show(imgS, FINAL);
       },
       [],
       ">-0.1"

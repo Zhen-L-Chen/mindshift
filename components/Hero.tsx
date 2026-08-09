@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { useLang, LUMA_EVENT_ID, LUMA_URL } from "@/lib/i18n";
+import { store } from "@/lib/store";
 import MindshiftMark from "./MindshiftMark";
 
 /**
@@ -74,6 +75,50 @@ export default function Hero() {
           scrub: true,
         },
       });
+
+      // the tired-neon flicker: every so often, at rest, the sign shorts into
+      // its true state — SHIFT upright for a blink, a flutter, then back.
+      // Instant snaps, no tweens; rare enough to be a wink, not a strobe.
+      const shiftEl = svg.querySelector<SVGGElement>(".shift-live");
+      if (shiftEl) {
+        const up = () =>
+          gsap.set(shiftEl, {
+            rotation: 0,
+            x: 0,
+            y: 0,
+            transformOrigin: "50% 51%",
+          });
+        const down = () => gsap.set(shiftEl, { clearProps: "transform" });
+        let clock = 0;
+        let nextFlick = 3.8 + Math.random() * 3;
+        let flicking = false;
+        const flick = () => {
+          flicking = true;
+          const ftl = gsap.timeline({
+            onComplete: () => {
+              down();
+              flicking = false;
+            },
+          });
+          ftl
+            .call(up, [], 0)
+            .call(down, [], 0.09)
+            .call(up, [], 0.16)
+            .call(down, [], 0.42);
+        };
+        const flickTick = (_t: number, deltaMs: number) => {
+          clock += deltaMs / 1000;
+          // only while the page rests at the top — scroll owns the rotation
+          if (!flicking && clock >= nextFlick && store.p < 0.04) {
+            flick();
+            nextFlick = clock + 6 + Math.random() * 4;
+          }
+        };
+        gsap.ticker.add(flickTick);
+        return () => {
+          gsap.ticker.remove(flickTick);
+        };
+      }
     });
     return () => mm.revert();
   }, [lang]);
