@@ -52,7 +52,7 @@ export function RingsMotif({
   );
 }
 
-export function DraftGoalLogo({ height = 44 }: { height?: number }) {
+export function DraftGoalLogo({ height = 58 }: { height?: number }) {
   // viewBox 249.3 × 118.4
   return (
     <img
@@ -65,7 +65,7 @@ export function DraftGoalLogo({ height = 44 }: { height?: number }) {
   );
 }
 
-export function PapermindsLogo({ height = 22 }: { height?: number }) {
+export function PapermindsLogo({ height = 29 }: { height?: number }) {
   // viewBox 263.4 × 54.7
   return (
     <img
