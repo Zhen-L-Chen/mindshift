@@ -287,6 +287,7 @@ a.btn,
   display: block;
   width: 100%;
   height: auto;
+  color: var(--cream); /* the cream match-cut layer + film flashes */
 }
 
 /* GSAP owns .cin-shift's transform (svgOrigin pivot on the SHIFT letters);
@@ -444,13 +445,14 @@ a.btn.btn-blue {
   .hero-bar .tag:last-child {
     justify-self: center;
   }
+  /* the strip stays one row — tags shrink, the lockup keeps center stage */
   .p2-foot-strip {
-    grid-template-columns: 1fr;
-    justify-items: center;
-    gap: 10px;
-    text-align: center;
+    gap: 8px;
   }
-  .p2-foot-strip .tag:last-child {
-    justify-self: center;
+  .p2-foot-strip .tag {
+    font-size: 9.5px;
+  }
+  .strip-mark {
+    width: 84px;
   }
 }

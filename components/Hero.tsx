@@ -55,10 +55,25 @@ export default function Hero() {
         .set(letters[6], { opacity: 1 }, 1.62);
 
       tl.from(
-        sec.current!.querySelectorAll(".hero-tagline, .hero-bar, .scroll-drip"),
+        sec.current!.querySelectorAll(".hero-tagline, .hero-bar"),
         { autoAlpha: 0, duration: 0.5, stagger: 0.15 },
         1.15
       );
+
+      // the lockup recedes as you leave the blue — its cream double waits on
+      // the dark page for the match cut
+      gsap.to(sec.current!.querySelector(".hero-lockup"), {
+        yPercent: -12,
+        autoAlpha: 0.12,
+        scale: 0.94,
+        ease: "none",
+        scrollTrigger: {
+          trigger: sec.current,
+          start: "top top",
+          end: "bottom 30%",
+          scrub: true,
+        },
+      });
     });
     return () => mm.revert();
   }, [lang]);
