@@ -4,11 +4,10 @@ import { MIND, SHIFT } from "./MindshiftMark";
  * The cinema wordmark: the giant MINDSHIFT whose letterforms are windows onto
  * the archive photography.
  *
- * Layers per half: photo (<image>, geometry aimed at the frame's face by
- * Page2) → flash rect → cream letterforms on top. The cream layer makes the
- * match-cut with the hero lockup — the mark arrives looking exactly like the
- * hero's, then "develops" into film as the cuts begin. SHIFT lives in a
- * rotating group (reversed until the writing ends).
+ * MIND is one clip window. SHIFT is FIVE — one per letter — so the finale can
+ * play in boot language: windows power down in cascade, the orientation swaps
+ * while dark, windows power back up. No visible rotation, ever. The cream
+ * layers make the match-cut with the hero (they develop away as cuts begin).
  */
 export default function CinemaMark({
   firstPhoto,
@@ -44,17 +43,17 @@ export default function CinemaMark({
             <path key={i} d={d} />
           ))}
         </clipPath>
-        <clipPath id="cin-clip-s">
-          {SHIFT.map((d, i) => (
-            <path key={i} d={d} />
-          ))}
-        </clipPath>
+        {SHIFT.map((d, i) => (
+          <clipPath key={i} id={`cin-clip-s${i}`}>
+            <path d={d} />
+          </clipPath>
+        ))}
       </defs>
 
       <g clipPath="url(#cin-clip-m)">
         {img("cin-img-m")}
         <rect
-          className="cin-flash cin-flash-m"
+          className="cin-flash"
           x="0"
           y="0"
           width="610.4"
@@ -70,18 +69,20 @@ export default function CinemaMark({
       </g>
 
       <g className="cin-shift">
-        <g clipPath="url(#cin-clip-s)">
-          {img("cin-img-s")}
-          <rect
-            className="cin-flash cin-flash-s"
-            x="0"
-            y="0"
-            width="610.4"
-            height="119.4"
-            fill="currentColor"
-            opacity="0"
-          />
-        </g>
+        {SHIFT.map((_, i) => (
+          <g key={i} className="cin-sletter" clipPath={`url(#cin-clip-s${i})`}>
+            {img("cin-img-s")}
+            <rect
+              className="cin-flash"
+              x="287"
+              y="0"
+              width="323.4"
+              height="119.4"
+              fill="currentColor"
+              opacity="0"
+            />
+          </g>
+        ))}
         <g className="cin-cream cin-cream-s" fill="currentColor">
           {SHIFT.map((d, i) => (
             <path key={i} d={d} />

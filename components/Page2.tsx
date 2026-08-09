@@ -91,7 +91,10 @@ export default function Page2() {
     if (!cinShift || !sMind || !sShift) return;
 
     const imgM = cinEl.querySelector<SVGImageElement>(".cin-img-m");
-    const imgS = cinEl.querySelector<SVGImageElement>(".cin-img-s");
+    const sImgs = [...cinEl.querySelectorAll<SVGImageElement>(".cin-img-s")];
+    const sWindows = [
+      ...cinEl.querySelectorAll<SVGGElement>(".cin-sletter"),
+    ];
     const flashes = cinEl.querySelectorAll<SVGRectElement>(".cin-flash");
     const creams = cinEl.querySelectorAll<SVGGElement>(".cin-cream");
 
@@ -149,21 +152,22 @@ export default function Page2() {
       const dur = RHYTHM[cut.beat++ % RHYTHM.length] * (0.85 + Math.random() * 0.3);
       const r = Math.random();
 
+      const showS = (p: Ph) => sImgs.forEach((im) => show(im, p));
       if (cut.split) {
         // resolve last beat's disagreement: both halves sync up
         const p = pick();
         show(imgM, p);
-        show(imgS, p);
+        showS(p);
         cut.split = false;
       } else if (r < 0.14) {
         // split frame: MIND and SHIFT see different faces, for one beat
         show(imgM, pick());
-        show(imgS, pick());
+        showS(pick());
         cut.split = true;
       } else {
         const p = pick();
         show(imgM, p);
-        show(imgS, p);
+        showS(p);
         if (r < 0.24) {
           // film flash on the cut
           gsap.fromTo(
@@ -174,7 +178,7 @@ export default function Page2() {
         } else if (r < 0.44) {
           // zoom punch
           gsap.fromTo(
-            [imgM, imgS],
+            [imgM, ...sImgs],
             { scale: 1.045, svgOrigin: "305 60" },
             { scale: 1, svgOrigin: "305 60", duration: 0.35, ease: "power2.out" }
           );
@@ -185,7 +189,7 @@ export default function Page2() {
         // long hold: a slow drift, like the camera breathing
         const dx = (Math.random() < 0.5 ? -1 : 1) * 8;
         gsap.fromTo(
-          [imgM, imgS],
+          [imgM, ...sImgs],
           { x: -dx },
           { x: dx, duration: dur, ease: "none" }
         );
@@ -231,21 +235,36 @@ export default function Page2() {
       );
     });
 
-    // writing done: the cuts settle on the bright frame, SHIFT rights itself
+    // writing done: the cuts settle on the bright frame
     master.call(
       () => {
         cut.on = false;
         show(imgM, FINAL);
-        show(imgS, FINAL);
+        sImgs.forEach((im) => show(im, FINAL));
       },
       [],
       ">-0.1"
     );
-    master.to(
+
+    // then the flicker, boot-style — no rotation ever shown: SHIFT's letter
+    // windows power down in cascade, the orientation swaps in the dark, and
+    // they power back up upright, one blinking awake late
+    const fl = gsap.timeline();
+    sWindows.forEach((w, i) => fl.set(w, { opacity: 0 }, i * 0.05));
+    fl.set(
       cinShift,
-      { rotation: 0, svgOrigin: "448.9 59.7", duration: 1.2, ease: "power2.inOut" },
-      "<"
+      { rotation: 0, svgOrigin: "448.9 59.7" },
+      "+=0.09"
     );
+    const flBase = sWindows.length * 0.05 + 0.09;
+    sWindows.forEach((w, i) => fl.set(w, { opacity: 1 }, flBase + 0.06 * i));
+    const fj = Math.floor(Math.random() * sWindows.length);
+    fl.set(sWindows[fj], { opacity: 0.2 }, "+=0.13").set(
+      sWindows[fj],
+      { opacity: 1 },
+      "+=0.08"
+    );
+    master.add(fl, ">+0.35");
 
     // and the bottom lockup: converge to center first, then SHIFT turns around
     master

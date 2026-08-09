@@ -76,42 +76,67 @@ export default function Hero() {
         },
       });
 
-      // the tired-neon flicker: every so often, at rest, the sign shorts into
-      // its true state — SHIFT upright for a blink, a flutter, then back.
-      // Instant snaps, no tweens; rare enough to be a wink, not a strobe.
+      // the relay: every so often, at rest, the sign catches its true state.
+      // Boot language, not jitter — SHIFT's letters power down in cascade,
+      // the orientation swaps while dark, letters power up staggered (one
+      // blinks, tired), it HOLDS upright a few seconds, then relays back.
+      // Same translate as the flipped seat — the word never leaves its line.
       const shiftEl = svg.querySelector<SVGGElement>(".shift-live");
       if (shiftEl) {
-        const up = () =>
-          gsap.set(shiftEl, {
-            rotation: 0,
-            x: 0,
-            y: 0,
-            transformOrigin: "50% 51%",
-          });
-        const down = () => gsap.set(shiftEl, { clearProps: "transform" });
+        const sLetters = [...shiftEl.querySelectorAll<SVGPathElement>(".ltr")];
+        // GSAP owns this group outright — absolute pivot on the SHIFT
+        // letters' center, identical seat in both states: it can never
+        // leave its line. (A stylesheet transform here poisons GSAP's
+        // matrix parsing — the cinema taught us.)
+        const SEAT = { x: -2.9, y: 0.29, svgOrigin: "448.9 59.7" };
+        gsap.set(shiftEl, { ...SEAT, rotation: 180 });
+
+        let phase: "rest" | "in" | "hold" | "out" = "rest";
         let clock = 0;
-        let nextFlick = 3.8 + Math.random() * 3;
-        let flicking = false;
-        const flick = () => {
-          flicking = true;
-          const ftl = gsap.timeline({
-            onComplete: () => {
-              down();
-              flicking = false;
-            },
-          });
-          ftl
-            .call(up, [], 0)
-            .call(down, [], 0.09)
-            .call(up, [], 0.16)
-            .call(down, [], 0.42);
+        let nextAt = 2.8 + Math.random() * 1.7; // first catch, a couple seconds in
+        let holdUntil = 0;
+
+        const cascade = (dir: "up" | "down", onDone: () => void) => {
+          const tl = gsap.timeline({ onComplete: onDone });
+          // power down, letter by letter
+          sLetters.forEach((p, i) => tl.set(p, { opacity: 0 }, i * 0.045));
+          // swap orientation in the dark — same seat, same line
+          tl.set(
+            shiftEl,
+            { ...SEAT, rotation: dir === "up" ? 0 : 180 },
+            "+=0.07"
+          );
+          // power up, staggered
+          const base = sLetters.length * 0.045 + 0.07;
+          sLetters.forEach((p, i) =>
+            tl.set(p, { opacity: 1 }, base + 0.055 * i)
+          );
+          // one letter blinks awake late — the boot's tired CRT
+          const j = Math.floor(Math.random() * sLetters.length);
+          tl.set(sLetters[j], { opacity: 0.25 }, "+=0.12").set(
+            sLetters[j],
+            { opacity: 1 },
+            "+=0.07"
+          );
         };
+
         const flickTick = (_t: number, deltaMs: number) => {
           clock += deltaMs / 1000;
-          // only while the page rests at the top — scroll owns the rotation
-          if (!flicking && clock >= nextFlick && store.p < 0.04) {
-            flick();
-            nextFlick = clock + 6 + Math.random() * 4;
+          if (phase === "rest" && clock >= nextAt && store.p < 0.04) {
+            phase = "in";
+            cascade("up", () => {
+              phase = "hold";
+              holdUntil = clock + 2.6 + Math.random() * 1.4;
+            });
+          } else if (
+            phase === "hold" &&
+            (clock >= holdUntil || store.p >= 0.04)
+          ) {
+            phase = "out";
+            cascade("down", () => {
+              phase = "rest";
+              nextAt = clock + 5 + Math.random() * 3.5;
+            });
           }
         };
         gsap.ticker.add(flickTick);
