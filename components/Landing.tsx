@@ -105,22 +105,10 @@ export default function Landing() {
     let smDark = 0;
     const tick = () => {
       sm += (store.p - sm) * 0.09;
-      const rot = 180 * (1 - sm);
-      const f = rot / 180;
-      root.style.setProperty("--shift-rot", rot.toFixed(2));
-      // official reverse lockup seats the flipped SHIFT 2.9 units tighter,
-      // 0.29 lower (measured against MINDSHIFT_REVERSE.svg) — eased with rot
-      root.style.setProperty("--sdx", (-2.9 * f).toFixed(3));
-      root.style.setProperty("--sdy", (0.29 * f).toFixed(3));
-      // letters sit loose only MID-turn, locked at both resting states
-      root.style.setProperty(
-        "--wob-k",
-        Math.sin(Math.PI * f).toFixed(3)
-      );
+      // the SHIFT states are binary (flipped / upright) — flips happen only
+      // through the flicker relays, never as a scroll-scrubbed rotation
       // header circle series stretches outward as you scroll (reverse trickle)
       root.style.setProperty("--ring-x", sm.toFixed(3));
-      // (the bottom mark's convergence is a GSAP timeline in Page2 — it plays
-      // once, on entering the viewport, independent of scroll position)
 
       const darkT = store.sections.rsvp; // page 2 arrival 0..1
       smDark += (darkT - smDark) * 0.09;
@@ -140,10 +128,6 @@ export default function Landing() {
     return () => {
       gsap.ticker.remove(tick);
       document.body.style.backgroundColor = "";
-      root.style.removeProperty("--shift-rot");
-      root.style.removeProperty("--sdx");
-      root.style.removeProperty("--sdy");
-      root.style.removeProperty("--wob-k");
       root.style.removeProperty("--ring-x");
       root.style.removeProperty("--bg-dyn");
     };
