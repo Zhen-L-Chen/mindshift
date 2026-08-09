@@ -98,19 +98,19 @@ export default function Page2() {
     const flashes = cinEl.querySelectorAll<SVGRectElement>(".cin-flash");
     const creams = cinEl.querySelectorAll<SVGGElement>(".cin-cream");
 
-    // initial states: reversed SHIFT, empty text, strip pieces far apart —
-    // equidistant from center, same baseline, sized to the strip's real width
+    // initial states: reversed SHIFT, empty text. The strip pieces sit on the
+    // SAME LINE, side by side with a word-space between them — a modest fixed
+    // gap, constant seat, absolute pivot (never drifts off its baseline).
     gsap.set(cinShift, { rotation: 180, svgOrigin: "448.9 59.7" });
     gsap.set(ghostEls, { visibility: "hidden" }); // typing takes over (ghosts keep the layout)
-    const svgMark = stripEl.querySelector<SVGSVGElement>(".strip-mark");
-    const mw = svgMark?.clientWidth || 150;
-    const sepPx = Math.max(
-      50,
-      Math.min(190, (stripEl.clientWidth - mw) / 2 - 150)
-    );
-    const SEP = sepPx * (610.4 / mw);
+    const SEP = 55;
     gsap.set(sMind, { x: -SEP });
-    gsap.set(sShift, { x: SEP, rotation: 180, transformOrigin: "50% 51%" });
+    gsap.set(sShift, {
+      x: SEP - 2.9,
+      y: 0.29,
+      rotation: 180,
+      svgOrigin: "448.9 59.7",
+    });
 
     // approach shot: the mark drifts up into place as it enters — the hero's
     // lockup receding above makes this read as one object crossing the fold
@@ -266,11 +266,12 @@ export default function Page2() {
     );
     master.add(fl, ">+0.35");
 
-    // and the bottom lockup: converge to center first, then SHIFT turns around
+    // and the bottom lockup: the halves close their word-space, then SHIFT
+    // turns around
     master
-      .to(sMind, { x: 0, duration: 1.5, ease: "power2.inOut" }, ">-0.3")
-      .to(sShift, { x: -2.9, y: 0.29, duration: 1.5, ease: "power2.inOut" }, "<")
-      .to(sShift, { rotation: 0, duration: 0.7, ease: "power2.inOut" }, ">+0.12");
+      .to(sMind, { x: 0, duration: 0.9, ease: "power2.inOut" }, ">-0.2")
+      .to(sShift, { x: -2.9, y: 0.29, duration: 0.9, ease: "power2.inOut" }, "<")
+      .to(sShift, { rotation: 0, duration: 0.7, ease: "power2.inOut" }, ">+0.15");
 
     return () => {
       gsap.ticker.remove(cutTick);
@@ -325,7 +326,7 @@ export default function Page2() {
 
       <div className="p2-foot-strip" ref={strip}>
         <p className="tag">{t.dateTag}</p>
-        <MindshiftMark className="strip-mark" />
+        <MindshiftMark className="strip-mark" bareShift />
         <p className="tag">{t.netTag}</p>
       </div>
     </section>

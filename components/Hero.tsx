@@ -84,12 +84,12 @@ export default function Hero() {
       const shiftEl = svg.querySelector<SVGGElement>(".shift-live");
       if (shiftEl) {
         const sLetters = [...shiftEl.querySelectorAll<SVGPathElement>(".ltr")];
-        // GSAP owns this group outright — absolute pivot on the SHIFT
-        // letters' center, identical seat in both states: it can never
-        // leave its line. (A stylesheet transform here poisons GSAP's
-        // matrix parsing — the cinema taught us.)
-        const SEAT = { x: -2.9, y: 0.29, svgOrigin: "448.9 59.7" };
-        gsap.set(shiftEl, { ...SEAT, rotation: 180 });
+        // The flip stays 100% CSS (flipped on landing, exactly as always).
+        // The relay only toggles the element's own --shift-rot variable while
+        // the letters are dark — the stylesheet does all transform math, so
+        // the word can never leave its seat. GSAP touches opacity only.
+        const up = () => shiftEl.style.setProperty("--shift-rot", "0");
+        const down = () => shiftEl.style.removeProperty("--shift-rot");
 
         let phase: "rest" | "in" | "hold" | "out" = "rest";
         let clock = 0;
@@ -101,11 +101,7 @@ export default function Hero() {
           // power down, letter by letter
           sLetters.forEach((p, i) => tl.set(p, { opacity: 0 }, i * 0.045));
           // swap orientation in the dark — same seat, same line
-          tl.set(
-            shiftEl,
-            { ...SEAT, rotation: dir === "up" ? 0 : 180 },
-            "+=0.07"
-          );
+          tl.call(dir === "up" ? up : down, [], "+=0.07");
           // power up, staggered
           const base = sLetters.length * 0.045 + 0.07;
           sLetters.forEach((p, i) =>
@@ -142,6 +138,7 @@ export default function Hero() {
         gsap.ticker.add(flickTick);
         return () => {
           gsap.ticker.remove(flickTick);
+          shiftEl.style.removeProperty("--shift-rot");
         };
       }
     });

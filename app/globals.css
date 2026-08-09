@@ -101,6 +101,19 @@ button {
   will-change: transform;
 }
 
+/* GSAP-owned SHIFT (strip): no stylesheet transform to fight with */
+.shift-live.shift-bare {
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .shift-live.shift-bare {
+    transform: rotate(180deg);
+    transform-box: view-box;
+    transform-origin: 448.9px 59.7px;
+  }
+}
+
 .ltr {
   transform: rotate(calc(var(--wob-k, 0) * var(--wob, 0) * 90deg));
   transform-box: fill-box;

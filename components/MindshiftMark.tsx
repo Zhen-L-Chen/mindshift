@@ -29,8 +29,11 @@ const WOBS = [0.02, -0.014, 0.024, -0.018, 0.015];
 
 export default function MindshiftMark({
   className,
+  bareShift = false,
 }: {
   className?: string;
+  /** strip the stylesheet transform from the SHIFT group so GSAP can own it */
+  bareShift?: boolean;
 }) {
   return (
     <svg
@@ -46,7 +49,7 @@ export default function MindshiftMark({
           <path key={`m${i}`} className="ltr" d={d} />
         ))}
       </g>
-      <g className="shift-live">
+      <g className={bareShift ? "shift-live shift-bare" : "shift-live"}>
         {SHIFT.map((d, i) => (
           <path
             key={`s${i}`}
