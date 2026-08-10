@@ -23,7 +23,7 @@ export interface Dict {
 
 export const dicts: Record<Lang, Dict> = {
   fr: {
-    topTag: "//Un évènement pensé par",
+    topTag: "//Un évènement présenté par",
     dateTag: "//:16 septembre",
     netTag: "//:5@8_networking",
     cta: "Réserver votre place",
@@ -73,7 +73,7 @@ export const dicts: Record<Lang, Dict> = {
     served: "//Boissons et bouchées seront servies tout au long de la soirée.",
   },
   en: {
-    topTag: "//An event curated by",
+    topTag: "//An event presented by",
     dateTag: "//:september 16",
     netTag: "//:5@8_networking",
     cta: "Book your seat",
