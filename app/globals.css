@@ -365,9 +365,29 @@ a.btn,
   line-height: 1.85;
 }
 
-.p2-rules p,
+/* the long "why attend" column breathes a little tighter */
+.p2-left {
+  gap: 18px;
+}
+
 .p2-venue p {
   margin: 0;
+}
+
+/* column headings + the doc's bold pull-lines */
+.p2-h {
+  font-size: clamp(14px, 1.35vw, 16.5px);
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+.p2-strong {
+  font-weight: 700;
+}
+
+.p2-credit {
+  opacity: 0.72;
 }
 
 /* the bottom strip: date · small lockup (slides together) · networking */

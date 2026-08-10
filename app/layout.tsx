@@ -15,14 +15,14 @@ const fira = localFont({
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
 export const metadata: Metadata = {
-  title: "MINDSHIFT — 5@7 networking — 16 septembre — Montréal",
+  title: "MINDSHIFT — 5@8 networking — 16 septembre — Montréal",
   description:
-    "Un 5@7 pour renverser les perspectives. Le 16 septembre au Mal Nécessaire, Montréal. Réservation obligatoire, places limitées. Un évènement pensé par paperminds × Draft & Goal.",
+    "Boire. Échanger. Voir autrement. La technologie s’améliore. Et nous? 16 septembre 2026, 17 h à 20 h, Bar Le Mal Nécessaire, Montréal. Présenté par Paperminds et Draft & Goal.",
   keywords: [
     "MINDSHIFT",
     "paperminds",
     "Draft & Goal",
-    "5@7",
+    "5@8",
     "networking",
     "Montréal",
   ],

@@ -215,7 +215,8 @@ export default function Page2() {
     });
     master.to(creams, { autoAlpha: 0, duration: 1.1, ease: "power2.in" }, 0.15);
 
-    // the text writes itself, paragraph by paragraph
+    // the text writes itself, paragraph by paragraph — the new copy is longer,
+    // so the keys move faster and the breaths between paragraphs are shorter
     typedEls.forEach((el, i) => {
       const text = ghostEls[i]?.textContent ?? "";
       const proxy = { n: 0 };
@@ -223,7 +224,7 @@ export default function Page2() {
         proxy,
         {
           n: text.length,
-          duration: Math.max(0.8, text.length / 55),
+          duration: Math.max(0.7, text.length / 80),
           ease: "none",
           onStart: () => el.classList.add("typing"),
           onUpdate: () => {
@@ -231,7 +232,7 @@ export default function Page2() {
           },
           onComplete: () => el.classList.remove("typing"),
         },
-        i === 0 ? 0.4 : "+=0.35"
+        i === 0 ? 0.4 : "+=0.22"
       );
     });
 
@@ -290,27 +291,31 @@ export default function Page2() {
 
       <div className="p2-cols" ref={cols}>
         <div className="p2-left">
+          <p className="p2-block p2-credit">{t.credit}</p>
+          <h2 className="p2-block p2-h">{t.whyTitle}</h2>
           {t.paras.map((p) => (
-            <p className="p2-block typed" key={p.slice(0, 24)} aria-label={p}>
+            <p
+              className={`p2-block typed${p.b ? " p2-strong" : ""}`}
+              key={p.t.slice(0, 32)}
+              aria-label={p.t}
+            >
               <span className="ghost" aria-hidden>
-                {p}
+                {p.t}
               </span>
               <span className="typed-out" aria-hidden />
             </p>
           ))}
         </div>
         <div className="p2-right">
-          <div className="p2-block p2-rules">
-            {t.rules.map((r) => (
-              <p key={r}>{r}</p>
-            ))}
-          </div>
+          <h2 className="p2-block p2-h">{t.infoTitle}</h2>
           <div className="p2-block p2-venue">
-            {t.venue.map((v) => (
-              <p key={v}>{v}</p>
+            {t.info.map((v) => (
+              <p key={v.t} className={v.b ? "p2-strong" : undefined}>
+                {v.t}
+              </p>
             ))}
           </div>
-          <p className="p2-block">{t.fiveA8}</p>
+          <p className="p2-block">{t.served}</p>
           <div className="p2-block">
             <a
               href={LUMA_URL}
