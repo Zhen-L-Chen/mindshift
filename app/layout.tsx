@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import localFont from "next/font/local";
+import { shareMetadata } from "@/lib/share";
 import "./globals.css";
 
 const fira = localFont({
@@ -14,23 +15,10 @@ const fira = localFont({
    don't get the prefix from Next, so the cursor rules are injected here. */
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
-/* Absolute origin for social-share URLs: NEXT_PUBLIC_SITE_URL wins, then
-   Vercel's production domain, then the GitHub Pages host (BASE carries the
-   /mindshift prefix there). */
-const SITE_ORIGIN =
-  process.env.NEXT_PUBLIC_SITE_URL ??
-  (process.env.VERCEL_PROJECT_PRODUCTION_URL
-    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
-    : "https://zhen-l-chen.github.io");
-
-const TITLE = "MINDSHIFT — 5@8 networking — September 16 — Montréal";
-const DESCRIPTION =
-  "Drink. Discuss. Shift. Technology is getting better. Are we? September 16, 2026, 5 PM to 8 PM, Bar Le Mal Nécessaire, Montréal. Presented by Paperminds and Draft & Goal.";
-
+/* Root entry shares in English (the default card); /en/ and /fr/ carry
+   their own language-matched cards for targeted email links. */
 export const metadata: Metadata = {
-  metadataBase: new URL(SITE_ORIGIN),
-  title: TITLE,
-  description: DESCRIPTION,
+  ...shareMetadata("en", "/"),
   keywords: [
     "MINDSHIFT",
     "paperminds",
@@ -39,28 +27,6 @@ export const metadata: Metadata = {
     "networking",
     "Montréal",
   ],
-  openGraph: {
-    title: TITLE,
-    description: DESCRIPTION,
-    url: `${BASE}/`,
-    siteName: "MINDSHIFT",
-    locale: "en_CA",
-    type: "website",
-    images: [
-      {
-        url: `${BASE}/og.jpg`,
-        width: 1200,
-        height: 1200,
-        alt: "MINDSHIFT — paperminds × Draft & Goal",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: TITLE,
-    description: DESCRIPTION,
-    images: [`${BASE}/og.jpg`],
-  },
 };
 
 export const viewport: Viewport = {
