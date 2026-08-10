@@ -14,10 +14,23 @@ const fira = localFont({
    don't get the prefix from Next, so the cursor rules are injected here. */
 const BASE = process.env.NEXT_PUBLIC_BASE_PATH ?? "";
 
+/* Absolute origin for social-share URLs: NEXT_PUBLIC_SITE_URL wins, then
+   Vercel's production domain, then the GitHub Pages host (BASE carries the
+   /mindshift prefix there). */
+const SITE_ORIGIN =
+  process.env.NEXT_PUBLIC_SITE_URL ??
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : "https://zhen-l-chen.github.io");
+
+const TITLE = "MINDSHIFT — 5@8 networking — 16 septembre — Montréal";
+const DESCRIPTION =
+  "Boire. Échanger. Voir autrement. La technologie s’améliore. Et nous? 16 septembre 2026, 17 h à 20 h, Bar Le Mal Nécessaire, Montréal. Présenté par Paperminds et Draft & Goal.";
+
 export const metadata: Metadata = {
-  title: "MINDSHIFT — 5@8 networking — 16 septembre — Montréal",
-  description:
-    "Boire. Échanger. Voir autrement. La technologie s’améliore. Et nous? 16 septembre 2026, 17 h à 20 h, Bar Le Mal Nécessaire, Montréal. Présenté par Paperminds et Draft & Goal.",
+  metadataBase: new URL(SITE_ORIGIN),
+  title: TITLE,
+  description: DESCRIPTION,
   keywords: [
     "MINDSHIFT",
     "paperminds",
@@ -26,6 +39,28 @@ export const metadata: Metadata = {
     "networking",
     "Montréal",
   ],
+  openGraph: {
+    title: TITLE,
+    description: DESCRIPTION,
+    url: `${BASE}/`,
+    siteName: "MINDSHIFT",
+    locale: "fr_CA",
+    type: "website",
+    images: [
+      {
+        url: `${BASE}/og.jpg`,
+        width: 1200,
+        height: 1200,
+        alt: "MINDSHIFT — paperminds × Draft & Goal",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: TITLE,
+    description: DESCRIPTION,
+    images: [`${BASE}/og.jpg`],
+  },
 };
 
 export const viewport: Viewport = {
