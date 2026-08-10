@@ -23,9 +23,9 @@ const SITE_ORIGIN =
     ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
     : "https://zhen-l-chen.github.io");
 
-const TITLE = "MINDSHIFT — 5@8 networking — 16 septembre — Montréal";
+const TITLE = "MINDSHIFT — 5@8 networking — September 16 — Montréal";
 const DESCRIPTION =
-  "Boire. Échanger. Voir autrement. La technologie s’améliore. Et nous? 16 septembre 2026, 17 h à 20 h, Bar Le Mal Nécessaire, Montréal. Présenté par Paperminds et Draft & Goal.";
+  "Drink. Discuss. Shift. Technology is getting better. Are we? September 16, 2026, 5 PM to 8 PM, Bar Le Mal Nécessaire, Montréal. Presented by Paperminds and Draft & Goal.";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_ORIGIN),
@@ -44,7 +44,7 @@ export const metadata: Metadata = {
     description: DESCRIPTION,
     url: `${BASE}/`,
     siteName: "MINDSHIFT",
-    locale: "fr_CA",
+    locale: "en_CA",
     type: "website",
     images: [
       {
