@@ -31,7 +31,8 @@ const rgb = (c: [number, number, number]) =>
   `rgb(${Math.round(c[0])},${Math.round(c[1])},${Math.round(c[2])})`;
 
 export default function Landing({ initialLang }: { initialLang?: Lang }) {
-  const [lang, setLangState] = useState<Lang>(initialLang ?? "fr");
+  // the root (mindshift.social) lands in English; /fr/ and the toggle opt in
+  const [lang, setLangState] = useState<Lang>(initialLang ?? "en");
 
   // a language slug (/en, /fr) is an explicit choice — it beats the saved
   // preference; the bare root restores whatever the visitor picked last

@@ -39,7 +39,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="fr" className={fira.variable}>
+    <html lang="en" className={fira.variable}>
       <body>
         <style>{`
 @media (hover: hover) and (pointer: fine) {
