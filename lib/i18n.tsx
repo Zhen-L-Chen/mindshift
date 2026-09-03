@@ -70,7 +70,7 @@ export const dicts: Record<Lang, Dict> = {
       { t: "1015 Rue St Alexandre," },
       { t: "Montréal, Québec H2Z 1N9" },
     ],
-    served: "//Boissons et bouchées seront servies tout au long de la soirée.",
+    served: "//Des boissons seront servies tout au long de la soirée.",
   },
   en: {
     topTag: "//An event presented by",
@@ -118,7 +118,7 @@ export const dicts: Record<Lang, Dict> = {
       { t: "1015 Rue St Alexandre," },
       { t: "Montréal, Québec H2Z 1N9" },
     ],
-    served: "//Drinks and bites will be served throughout the evening.",
+    served: "//Drinks will be served throughout the evening.",
   },
 };
 
