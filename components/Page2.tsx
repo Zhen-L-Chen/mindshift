@@ -334,6 +334,8 @@ export default function Page2() {
         <MindshiftMark className="strip-mark" bareShift />
         <p className="tag">{t.netTag}</p>
       </div>
+
+      <p className="p2-notice">{t.notice}</p>
     </section>
   );
 }

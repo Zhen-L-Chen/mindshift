@@ -19,6 +19,7 @@ export interface Dict {
   infoTitle: string;
   info: Line[];
   served: string;
+  notice: string;
 }
 
 export const dicts: Record<Lang, Dict> = {
@@ -71,6 +72,8 @@ export const dicts: Record<Lang, Dict> = {
       { t: "Montréal, Québec H2Z 1N9" },
     ],
     served: "//Des boissons seront servies tout au long de la soirée.",
+    notice:
+      "//Des photos et vidéos seront captées pendant l’événement. En vous inscrivant, vous acceptez de pouvoir apparaître, le cas échéant, dans des contenus de Paperminds et de Draft & Goal.",
   },
   en: {
     topTag: "//An event presented by",
@@ -119,6 +122,8 @@ export const dicts: Record<Lang, Dict> = {
       { t: "Montréal, Québec H2Z 1N9" },
     ],
     served: "//Drinks will be served throughout the evening.",
+    notice:
+      "//Photos and videos will be captured during the event. By registering, you agree that you may appear, where applicable, in content produced by Paperminds and Draft & Goal.",
   },
 };
 
